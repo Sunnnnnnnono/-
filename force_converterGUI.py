@@ -38,6 +38,7 @@ def main():
     root.resizable(False, False)
 
     history = []
+    previous_result = None
     value_var = tk.StringVar()
     unit_var = tk.StringVar(value="kN")
     result_var = tk.StringVar(value="값과 단위를 입력한 뒤 변환 버튼을 누르세요.")
@@ -47,6 +48,8 @@ def main():
         value_entry.focus_set()
 
     def convert_from_input():
+        nonlocal previous_result
+
         user_input = value_var.get().strip()
         unit = unit_var.get()
 
@@ -65,13 +68,21 @@ def main():
             return
 
         newtons, kilonewtons, kilogram_force = convert_force(value, unit)
-        result_var.set(
+        previous_result = (
             f"N: {format_force(newtons)} N\n"
             f"kN: {format_force(kilonewtons)} kN\n"
             f"kgf: {format_force(kilogram_force)} kgf"
         )
+        result_var.set(previous_result)
         history.append(f"{format_force(value)} {unit} -> {format_force(newtons)} N, "
                        f"{format_force(kilonewtons)} kN, {format_force(kilogram_force)} kgf")
+
+    def show_previous_result(event=None):
+        if previous_result is not None:
+            result_var.set(previous_result)
+        else:
+            result_var.set("아직 계산 결과가 없습니다.")
+        return "break"
 
     def clear_input():
         value_var.set("")
@@ -134,7 +145,7 @@ def main():
         ("4", lambda: append_to_input("4")),
         ("5", lambda: append_to_input("5")),
         ("6", lambda: append_to_input("6")),
-        ("C", clear_input),
+        ("C", show_previous_result),
         ("1", lambda: append_to_input("1")),
         ("2", lambda: append_to_input("2")),
         ("3", lambda: append_to_input("3")),
@@ -157,6 +168,10 @@ def main():
     ttk.Label(result_frame, textvariable=result_var, justify="left", anchor="w").pack(fill="both", expand=True)
 
     value_entry.bind("<Return>", lambda event: convert_from_input())
+    root.bind("<KeyPress-c>", show_previous_result)
+    root.bind("<KeyPress-C>", show_previous_result)
+    value_entry.bind("<KeyPress-c>", show_previous_result)
+    value_entry.bind("<KeyPress-C>", show_previous_result)
     value_entry.focus_set()
     root.mainloop()
 
