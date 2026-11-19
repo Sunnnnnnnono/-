@@ -1,0 +1,5 @@
+method,evaluation_rows,actual_strong,hits,misses,false_alarms,normal_decisions,accuracy,precision,recall
+always_zero,744,39,0,39,0,705,0.947581,해당없음,0.000000
+current_wind_4plus,744,39,9,30,30,675,0.919355,0.230769,0.230769
+logistic_050,744,39,3,36,6,699,0.943548,0.333333,0.076923
+logistic_020,744,39,15,24,41,664,0.912634,0.267857,0.384615
